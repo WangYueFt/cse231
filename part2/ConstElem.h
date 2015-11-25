@@ -15,4 +15,10 @@ public:
         else
             return false;
     }
+    public string getName() {
+        return name;
+    }
+    public int getValue() {
+        return value;
+    }
 };
