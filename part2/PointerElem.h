@@ -31,4 +31,11 @@ public:
             return result;
         }
     }
+
+    string getName() {
+        return name;
+    }
+    vector<string> getValue() {
+        return toName;
+    }
 };

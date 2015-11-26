@@ -41,4 +41,11 @@ public:
             return result;
         }
     }
+
+    string getName() {
+        return name;
+    }
+    vector<range> getValue() {
+        return Range;
+    }
 };

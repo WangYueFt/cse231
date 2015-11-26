@@ -15,10 +15,10 @@ public:
         else
             return false;
     }
-    public string getName() {
+    string getName() {
         return name;
     }
-    public int getValue() {
+    int getValue() {
         return value;
     }
 };
