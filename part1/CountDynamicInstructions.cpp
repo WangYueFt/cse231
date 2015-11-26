@@ -62,6 +62,24 @@ namespace {
             
             return false;
         }
+        virtual void print(raw_ostream &O, const Module *M) const{
+            O << "CFG begin:" << endl;
+            for(int i=0; i<nodes.size(); i++){
+                O << "NodeId:" << nodes[i].num() << endl;
+                vector<Edge> edges;
+                edges = nodes[i].getInedges();
+                O << "IN:"
+                for(int j=0; j<edges.size(); j++)
+                    O << edges[j].num() << " ";
+                O << endl;
+                edges = nodes[i].getOutedges();
+                O << "OUT:"
+                for(int j=0; j<edges.size(); j++)
+                    O << edges[j].num() << " ";
+                O << endl;
+            }
+            O << "CFG end" << endl;
+        }
         static char ID;
     };
 }
