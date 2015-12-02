@@ -45,12 +45,16 @@ namespace {
                         BasicBlock::iterator tiit = iit;
                         tiit++;
                         edges.push_back(currentEdge);
-                        if(tiit != fit->end())
+                        if(tiit != fit->end()){
                             nodes[count].addOutEdge(currentEdge);
+                            currentEdge.addInNode(nodes[count]);
+                        }
                         if(flag)
                             flag = false;
-                        else
+                        else{
                             nodes[count].addInEdge(lastEdge);
+                            lastEdge.addOutNode(nodes[count]);
+                        }
                         lastEdge = currentEdge;
                         count++;
         			}
@@ -61,11 +65,22 @@ namespace {
                         currentEdge = Edge();
                         Instruction *ttt = &(*(Succ->begin()));
                         int idx = m.find(ttt)->second;
+                        currentEdge.addInNode(nodes[idx0]);
+                        currentEdge.addOutNode(nodes[idx]);
                         nodes[idx0].addOutEdge(currentEdge);
                         nodes[idx].addInEdge(currentEdge);
                     }
         		}
         	}
+            
+            in1.elems.push_back(new ConstElem("add", 123));
+            in1.elems.push_back(new ConstElem("add1", 321));
+            in2.elems.push_back(new ConstElem("add1", 321));
+            in2.elems.push_back(new ConstElem("add", 1234));
+            ConstProLattice<ConstElem> res = in1.join(in2);
+
+            //out = nodes[9].CPFlowOp(in);
+            out = res;
             return true;
         }
         virtual void print(raw_ostream &O, const Module *M) const{
@@ -73,6 +88,7 @@ namespace {
             for(size_t i=0; i<nodes.size(); i++){
                 O << "NodeId:" << nodes[i].num() << "\n";
                 O << "Node:"  << *(nodes[i].inst) << "\n";
+                O << "Operand:"  << nodes[i].inst->getOpcodeName() << "\n";
                 const vector<Edge> edges = nodes[i].getInEdges();
                 O << "IN:";
                 for(size_t j=0; j<edges.size(); j++)
@@ -87,10 +103,30 @@ namespace {
                 
             }
             O << "CFG end" << "\n";
+            string s = nodes[6].inst->getOpcodeName();
+            // ConstantInt* c = dyn_cast<ConstantInt>(v);
+            //ConstantInt* result = dyn_cast<ConstantInt>(c);
+            //int a = result->getValue().getLimitedValue();
+            //char* s = (char*)result;
+            // const string s = c->getName().data();
+            O << "Operand:" << s << "\n";
+            //O << "Operand:"  << a << "\n";
+
+            for (size_t i = 0; i < out.elems.size(); i++) {
+                O << out.elems[i]->getName() << " " << out.elems[i]->getValue() << " \n";
+            }
+            for (size_t i = 0; i < constelems.size(); i++) {
+                O << constelems[i]->getName() << " " << constelems[i]->getValue() << " \n";
+            }
+            
         }
         static char ID;
         vector<Node> nodes;
         vector<Edge> edges;
+        ConstProLattice<ConstElem> in;
+        ConstProLattice<ConstElem> in1, in2;
+        ConstProLattice<ConstElem> out;
+        vector<ConstElem*> constelems;
     };
 }
 char CFG::ID = 0;

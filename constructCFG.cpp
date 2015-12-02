@@ -67,9 +67,14 @@ namespace {
         		}
         	}
             
-            in.elems.push_back(new ConstElem("add", 123));
-            in.elems.push_back(new ConstElem("add1", 321));
-            out = nodes[9].CPFlowOp(in);
+            in1.elems.push_back(new ConstElem("add", 123));
+            in1.elems.push_back(new ConstElem("add1", 321));
+            in2.elems.push_back(new ConstElem("add1", 321));
+            in2.elems.push_back(new ConstElem("add", 1234));
+            ConstProLattice<ConstElem> res = in1.join(in2);
+
+            //out = nodes[9].CPFlowOp(in);
+            out = res;
             return true;
         }
         virtual void print(raw_ostream &O, const Module *M) const{
@@ -104,13 +109,18 @@ namespace {
             for (size_t i = 0; i < out.elems.size(); i++) {
                 O << out.elems[i]->getName() << " " << out.elems[i]->getValue() << " \n";
             }
+            for (size_t i = 0; i < constelems.size(); i++) {
+                O << constelems[i]->getName() << " " << constelems[i]->getValue() << " \n";
+            }
             
         }
         static char ID;
         vector<Node> nodes;
         vector<Edge> edges;
         ConstProLattice<ConstElem> in;
+        ConstProLattice<ConstElem> in1, in2;
         ConstProLattice<ConstElem> out;
+        vector<ConstElem*> constelems;
     };
 }
 char CFG::ID = 0;
