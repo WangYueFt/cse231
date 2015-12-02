@@ -27,9 +27,21 @@ public:
 		static int numOfEdges = 0;
 		edgeNum = numOfEdges++;
 	}
-
+	void setInNode(Node& n){
+		in = n;
+	}
+	void setOutNode(Node& n){
+		out = n;
+	}
+	Node& getInNode(){
+		return in;
+	}
+	Node& getOutNode(){
+		return out;
+	}
 private:
 	int edgeNum;
+	Node in,out;
 };
 
 
@@ -48,19 +60,19 @@ public:
 		in = vector<Edge>();
 		out = vector<Edge>();
 	}
-	void addInEdge(Edge e){
+	void addInEdge(Edge& e){
 		in.push_back(e);
 	}
-	void addOutEdge(Edge e){
+	void addOutEdge(Edge& e){
 		out.push_back(e);
 	}
 	int num() const{
 		return nodeId;
 	}
-	vector<Edge>  getInEdges() const{
+	vector<Edge>&  getInEdges() const{
 		return in;
 	}
-	vector<Edge> getOutEdges() const{
+	vector<Edge>& getOutEdges() const{
 		return out;
 	}
 	ConstProLattice<ConstElem> CPFlowOp(ConstProLattice<ConstElem> in) {
